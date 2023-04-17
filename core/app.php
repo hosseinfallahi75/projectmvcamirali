@@ -8,6 +8,7 @@ class App{
     {
         if (isset($_GET['url'])) {
             $url = $_GET['url'];
+            
             $url = $this->parseUrl($url);
             $this->controler = $url[0];
             unset($url[0]);
@@ -15,8 +16,9 @@ class App{
                 $this->method = $url[1];
                 unset($url[1]);
             }
-
+            
             $this->params = array_values($url);
+            
         }
         $controlerUrl = 'controllers/' . $this->controler . '.php';
         if (file_exists($controlerUrl)) {
@@ -41,7 +43,6 @@ class App{
         return $url;
     }
 }
-
 
 
 

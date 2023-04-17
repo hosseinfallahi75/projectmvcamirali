@@ -12,7 +12,9 @@ class Index extends Controller
     function index()
     {
         $slider1 = $this->model->getSlider1();
-        $data = array($slider1);
+        $onlyasanbiamoz = $this->model->onlyasanbiamoz();
+        $mostviewd = $this->model->mostviewd();
+        $data = array($slider1,$onlyasanbiamoz,$mostviewd);
         $this->view('index/index',$data);
 
     }

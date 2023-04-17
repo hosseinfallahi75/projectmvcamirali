@@ -9,6 +9,8 @@
 <body>
     <?php
     $slider1 = $data[0];
+    $onlyasanbiamoz = $data[1];
+    $mostviewd = $data[2];
     foreach ($slider1 as $slider) {
     ?>
             <a href="<?= $slider['link']; ?>"><img src="<?= $slider['img'] ?>" alt=""></a>
