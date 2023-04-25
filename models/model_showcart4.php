@@ -70,9 +70,37 @@
             $darsadDiscount = $this->checkCode($code);
             $amountDiscount = ($darsadDiscount * $basketPrice) / 100;
             $priceTotal = $basketPrice - $basketDiscount + $postPrice - $codeDiscount;
-            return $priceTotal;
 
+            $userId = self::sessionGet('userId');
+            $payType = $data['paytype'];
+            $beforepay = '';
+            $Description = 'خرید از آسان بیاموز';
+            if($payType == 1){
+                $Payment = new Payment;
+                $result = $Payment->zarinpalRequest($priceTotal,$Description,'asanbiamoz@gmail.com',$moblie);
+                $Status = $result['Status'];
+                $Authority = $result['Authority'];
+                $beforepay = $Authority;
+            }
+            $time = time();
+            $date = self::jalaliDate('Y/m/d');
+            $sql = "insert into tbl_order (family,ostan,city,code_posti,mobile,tel,address,basket,amount,post_type,post_price,userId,status,beforpay,pay_type,time_sabt,tarikh) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+            $params = [$family,$ostan,$city,$codeposti,$mobile,$tel,$address,$basket,$priceTotal,$postType,$postpice,$userId,1,$beforepay,$payType,$time,$date];
+            $this->doQuery($sql,$params);
+            if($payType == 1){
+                if($Status == 100){
+                    header('location: https://www.zarinpal.com/pg/StartPay/'.$Authority);
 
+                }
+                else{
+                    header('location:' . URL . 'showcart4/index/' . $Status);
+                }
+            }
+            if($payType == 4){
+                $sql = "selcet * from tbl_order order by id desc  limit 1";
+                $result = $this->deSelect($sql,[],1);
+                header('location:' . URL . 'checkout/index/' . $result['id']);
+            }
         }
     }
 
