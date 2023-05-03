@@ -16,6 +16,18 @@
             $result = $this->doSelect($sql,array($categoryId));
             return $result;
         }
+
+
+
+
+        function commentInfo($productId){
+            self::sessionInit();
+            $userId = self::sessionGet('userId');
+            $sql = "select * from tbl_comment where idproduct=? and user=?";
+            $data  = [$productId,$userId];
+            $result = $this->doSelect($sql,$data,1);
+            return $result;
+        }
     }
 
 
