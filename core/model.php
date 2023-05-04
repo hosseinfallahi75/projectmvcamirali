@@ -31,6 +31,17 @@
             return $result;
 
         }
+        function doQuery($sql,$values=[]){
+            $stmt = self::$conn->prepare();
+            foreach($values as  $key => $value){
+                $stmt->bindValue($key + 1 , $value);
+            }
+            $stmt->execute();
+
+        }
+
+
+
         public static function sessionInit(){
             @session_start();
         }
@@ -44,11 +55,34 @@
                 return false;
             }
         }
-    }
+        public static function getBasketCookie(){
+            if(isset($_COOKIE['basket'])){
+                $cookie = $_COOKIE['basket'];
+            }else{
+                $expire  = time() + 7 * 24 * 3600;
+                $value = time();
+                setcookie('basket',$value,$expire,'/');
+                $cookie = $value;
+            }
 
-    function getBasket(){
+        }
+        function getBasket(){
         
+        }
+        function getMenu($parentId = 0){
+            $sql = "select * from tbl_category where parent=?";
+            $result = $this->doSelect($sql,[$parentId]);
+            foreach($result as $row){
+                $children = $this->getMenu($row['id']);
+                $row['children'] = $children;
+
+            }
+            $data[] = $row;
+            return $data;
+        }
     }
+   
+   
 
 
 
