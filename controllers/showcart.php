@@ -10,6 +10,16 @@
             $data = ['basket' => $basket,'priceTotalall' => $priceTotalall];
             $this->view('showcart/index',$data);
         }
+        function deletebasket($productId){
+            $this->model->deleteBasket($productId);
+            $basketInfo = $this->model->getBasket();
+            echo json_encode($basketInfo);
+        }
+        function updatebasket(){
+            $this->model->updateBasket($_POST);
+            $basketInfo = $this->model->getBasket();
+            echo json_encode($basketInfo);
+        }
     }
 
 
