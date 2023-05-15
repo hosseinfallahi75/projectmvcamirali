@@ -4,11 +4,42 @@
         function __construct(){
             parent::__construct();
         }
+
+        function addAddress($data,$editAddressId){
+            $family = $data['family'];
+            $mobile = $data['mobile'];
+            $tel    = $data['tel'];
+            $ostan  = $data['state'];
+            $city   = $data['city'];
+            $mahale = $data['mahale'];
+            $codeposti = $data['codeposti'];
+            $address   = $data['address'];
+            $ostan_name = $data['ostan_name'];
+            $city_name = $data['city_name'];
+            Model::sessionInit();
+            $userId = Model::sessionGet('userId');
+            echo $editAddressId;
+            if($editAddressId == ''){
+                $sql = "insert into tbl_user_address (userid,family,mobile,tel,ostan,city,mahale,codeposti,address,ostan_name,city_name) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+                $params = [$userId,$family,$mobile,$tel,$ostan,$city,$mahale,$codeposti,$address,$ostan_name,$city_name];
+            }else{
+                $sql = "update tbl_user_address set family=?,moblie=?,tel=?,ostan=?,city=?,mahale=?,codeposti=?,address=?,ostan_name=?,city_name=? WHERE id=?";
+                $params = [$family,$mobile,$tel,$ostan,$city,$mahale,$codeposti,$address,$ostan_name,$city_name];
+            }
+            $this->doQuery($sql,$params);
+
+        }
         function getAddress(){
             $sql = "select * from tbl_user_address where userid=?";
             Model::sessionInit();
             $userId = Model::sessionGet('userId');
             $params = array($userId);
+            $result = $this->doSelect($sql,$params,1);
+            return $result;
+        }
+        function getAddressInfo($addressId){
+            $sql = "select * from tbl_user_address where id=?";
+            $params = [$addressId];
             $result = $this->doSelect($sql,$params,1);
             return $result;
         }
